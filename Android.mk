@@ -597,13 +597,22 @@ LOCAL_SHARED_LIBRARIES := \
 	libicuuc \
 	libicui18n \
 	libexpat \
-	libft2
+	libft2 \
+	libcutils
 
 LOCAL_STATIC_LIBRARIES := \
 	libgif \
 	libwebp-decode \
 	libwebp-encode \
 	libsfntly
+
+ifeq ($(TARGET_HAVE_QC_PERF),true)
+    LOCAL_WHOLE_STATIC_LIBRARIES += libqc-skia
+    ifeq ($(call is-board-platform-in-list,msm8909 msm8916 msm8974 msm8992 msm8994 msm8996 msm8937 msm8917 msm8953),true)
+        LOCAL_SHARED_LIBRARIES += libqc-opt
+    endif
+endif
+
 
 LOCAL_C_INCLUDES := \
 	external/jpeg \
@@ -656,6 +665,8 @@ LOCAL_EXPORT_C_INCLUDE_DIRS := \
 LOCAL_MODULE := \
 	libskia
 
+LOCAL_CLANG := false
+
 LOCAL_SRC_FILES_arm += \
 	src/core/SkUtilsArm.cpp \
 	src/opts/SkBitmapProcState_opts_arm.cpp \
@@ -667,6 +678,7 @@ LOCAL_SRC_FILES_arm += \
 	src/opts/SkUtils_opts_arm.cpp \
 	src/opts/SkXfermode_opts_arm.cpp
 
+
 ifeq ($(ARCH_ARM_HAVE_NEON), true)
 LOCAL_SRC_FILES_arm += \
 	src/opts/SkBitmapProcState_arm_neon.cpp \
@@ -677,7 +689,8 @@ LOCAL_SRC_FILES_arm += \
 	src/opts/SkMorphology_opts_neon.cpp \
 	src/opts/SkTextureCompression_opts_neon.cpp \
 	src/opts/SkUtils_opts_arm_neon.cpp \
-	src/opts/SkXfermode_opts_arm_neon.cpp
+	src/opts/SkXfermode_opts_arm_neon.cpp \
+	src/opts/ext/S32_Opaque_D32_filter_DX_shaderproc_neon.cpp
 
 LOCAL_CFLAGS_arm += \
 	-DSK_ARM_HAS_NEON
@@ -763,7 +776,7 @@ include $(BUILD_SHARED_LIBRARY)
 #
 
 # benchmark (timings)
-include $(BASE_PATH)/bench/Android.mk
+#include $(BASE_PATH)/bench/Android.mk
 
 # diamond-master (one test to rule them all)
-include $(BASE_PATH)/dm/Android.mk
+#include $(BASE_PATH)/dm/Android.mk

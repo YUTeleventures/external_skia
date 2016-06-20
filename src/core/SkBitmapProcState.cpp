@@ -28,6 +28,10 @@ extern void  Repeat_S16_D16_filter_DX_shaderproc_neon(const SkBitmapProcState&, 
 extern void  SI8_opaque_D32_filter_DX_neon(const SkBitmapProcState&, const uint32_t*, int, SkPMColor*);
 extern void  SI8_opaque_D32_filter_DX_shaderproc_neon(const SkBitmapProcState&, int, int, uint32_t*, int);
 extern void  Clamp_SI8_opaque_D32_filter_DX_shaderproc_neon(const SkBitmapProcState&, int, int, uint32_t*, int);
+#if !defined(__LP64__)
+extern void  S32_opaque_D32_filter_DX_neon(const SkBitmapProcState&, const uint32_t*, int, SkPMColor*);
+extern void  Clamp_S32_Opaque_D32_filter_DX_shaderproc_neon(const SkBitmapProcState&, int, int, uint32_t*, int);
+#endif //#if !defined(__LP64__)
 #endif
 
 extern void Clamp_S32_opaque_D32_nofilter_DX_shaderproc(const SkBitmapProcState&, int, int, uint32_t*, int);
@@ -829,6 +833,12 @@ SkBitmapProcState::ShaderProc32 SkBitmapProcState::chooseShaderProc32() {
         return DoNothing_shaderproc;
     }
     return NULL;
+}
+
+void SkBitmapProcState::beginRect(int x, int y, int width) {
+}
+
+void SkBitmapProcState::endRect() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
